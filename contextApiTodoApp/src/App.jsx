@@ -1,39 +1,65 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { TodoProvider } from './context/TodoContext'
+import { TodoForm, TodoItem } from './components';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  addTodo = (title) => {
-    setTodos([...todos, {
-      id: Date.now(),
-      title,
-      isCompleted: false,
-    }])
-  };
-  updateTodo = (todo) => {
-    setTodos((prev)=> prev.map((t)=> t.id === todo.id ? todo : t))
-  };
-  deleteTodo = (id) => {
-    setTodos((prev)=> prev.filter((t)=> t.id !== id))
-  };
-  completeToggle = (id) => {
-    setTodos((prev) => prev.find((t) => t.id === id ? {...t, isCompleted: !t.isCompleted} : t))
-  }
-  useEffect(()=> {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  },[todos]);
   
+  const addTodo = (todo) => {
+    setTodos((prev)=> ([todo, ...prev]))
+  }
+
+  // useEffect(() => {
+  //   localStorage.setItem('todos', JSON.stringify(todos));
+  // }, [todos]);
+
+  // useEffect(() => {
+  //   const stored = localStorage.getItem('todos');
+
+  //   if (!stored) return;
+
+  //   try {
+  //     const todosFromLocalStorage = JSON.parse(stored);
+  //     if (Array.isArray(todosFromLocalStorage) && todosFromLocalStorage.length > 0) {
+  //       setTodos(todosFromLocalStorage);
+  //     }
+  //   } catch (error) {
+  //     console.warn('Failed to parse stored todos:', error);
+  //     localStorage.removeItem('todos');
+  //   }
+  // }, []);
+    useEffect(() => {
+    const todos = JSON.parse(localStorage.getItem("todos"))
+
+    if (todos && todos.length > 0) {
+      setTodos(todos)
+    }
+  }, [])
+
   useEffect(() => {
-    const todosFromLocalStorage = JSON.parse(localStorage.getItem('todos'));
-    if(todosFromLocalStorage && todosFromLocalStorage.length > 0) {
-      setTodos(todosFromLocalStorage);
-    };
-  },[])
+    localStorage.setItem("todos", JSON.stringify(todos))
+  }, [todos])
 
   return (
-    <TodoProvider value={{todos, addTodo, updateTodo, deleteTodo, completeToggle}}>
-      
+    <TodoProvider value={{ todos, addTodo }}>
+      <div className="bg-[#172842] min-h-screen py-8">
+        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
+          <h1 className="text-2xl font-bold text-center mb-8 mt-2">Manage Your Todos</h1>
+          <div className="mb-4">
+            {/* Todo form goes here */}
+            <TodoForm />
+          </div>
+          <div className="flex flex-wrap gap-y-3">
+            {/*Loop and Add TodoItem here */}
+            {todos.length > 0 && todos.map((todo) => (
+              <div className='w-full' key={todo.id}>
+                <TodoItem todo={todo} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </TodoProvider>
   )
 }

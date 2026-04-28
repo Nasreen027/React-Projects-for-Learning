@@ -1,5 +1,8 @@
+import { useState } from "react";
+
 function TodoItem({ todo }) {
-    
+    const[todoTitle, setTodoTitle] = useState(todo.title)
+    const[isEditable, setIsEditable] = useState(true);
 
     return (
         <div
@@ -10,11 +13,13 @@ function TodoItem({ todo }) {
             <input
                 type="checkbox"
                 className="cursor-pointer"
+                checked={todo.isCompleted}
             />
             <input
                 type="text"
                 className={`border outline-none w-full bg-transparent rounded-lg border-transparent`}
-                value=''
+                value={todo.title}
+                onChange={(e)=> setTodoTitle(e.target.value)}
             />
             {/* Edit, Save Button */}
             <button
