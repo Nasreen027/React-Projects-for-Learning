@@ -5,31 +5,30 @@ import { TodoForm, TodoItem } from './components';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  
+
   const addTodo = (todo) => {
-    setTodos((prev)=> ([todo, ...prev]))
+    setTodos((prev) => ([todo, ...prev]))
   }
 
-  // useEffect(() => {
-  //   localStorage.setItem('todos', JSON.stringify(todos));
-  // }, [todos]);
+  const updateTodo = (id, title) => {
+    setTodos((prev) => 
+      prev.map((prevTodo)=> 
+        prevTodo.id === id ? {...prevTodo, title}: prevTodo)
+    );
+  }
+  
+  const completeToggle = (id) => {
+    setTodos((prev)=> 
+      prev.map((prevTodo)=> 
+        prevTodo.id === id ? {...prevTodo, isCompleted: !prevTodo.isCompleted} : prevTodo));
+  }
 
-  // useEffect(() => {
-  //   const stored = localStorage.getItem('todos');
+  const deleteTodo = (id) => {
+    setTodos((prev)=> 
+      prev.filter((prevTodo)=> prevTodo.id !== id));
+  }
 
-  //   if (!stored) return;
-
-  //   try {
-  //     const todosFromLocalStorage = JSON.parse(stored);
-  //     if (Array.isArray(todosFromLocalStorage) && todosFromLocalStorage.length > 0) {
-  //       setTodos(todosFromLocalStorage);
-  //     }
-  //   } catch (error) {
-  //     console.warn('Failed to parse stored todos:', error);
-  //     localStorage.removeItem('todos');
-  //   }
-  // }, []);
-    useEffect(() => {
+  useEffect(() => {
     const todos = JSON.parse(localStorage.getItem("todos"))
 
     if (todos && todos.length > 0) {
@@ -42,7 +41,7 @@ function App() {
   }, [todos])
 
   return (
-    <TodoProvider value={{ todos, addTodo }}>
+    <TodoProvider value={{ todos, addTodo, updateTodo, completeToggle, deleteTodo }}>
       <div className="bg-[#172842] min-h-screen py-8">
         <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
           <h1 className="text-2xl font-bold text-center mb-8 mt-2">Manage Your Todos</h1>
