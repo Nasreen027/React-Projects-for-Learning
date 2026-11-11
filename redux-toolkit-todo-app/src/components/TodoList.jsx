@@ -1,10 +1,24 @@
+import { useDispatch, useSelector } from "react-redux";
+import { removeTodo } from "../features/todo/todoSlice";
+
 export const TodoList = () => {
+  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+
   return (
-    <>
-      <ul className="list-none">
-        <li className="mt-4 flex justify-between items-center px-4 py-2 rounded">
-          <div>Todo 1</div>
-          <button className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md">
+    <ul className="list-none">
+      {todos.map((todo) => (
+        <li
+          key={todo.id}
+          className="mt-4 flex justify-between items-center px-4 py-2 rounded"
+        >
+          <div>{todo.text}</div>
+          <button
+            type="button"
+            aria-label="Delete todo"
+            className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
+            onClick={() => dispatch(removeTodo(todo.id))}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -21,7 +35,7 @@ export const TodoList = () => {
             </svg>
           </button>
         </li>
-      </ul>
-    </>
+      ))}
+    </ul>
   );
 };

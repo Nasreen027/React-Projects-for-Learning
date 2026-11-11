@@ -4,7 +4,7 @@ import { TodoList } from "./components/TodoList";
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center px-4">
+    <div className="min-h-screen items-center px-4">
       <AddTodo />
       <TodoList />
     </div>
