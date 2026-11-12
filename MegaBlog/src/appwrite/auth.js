@@ -36,10 +36,9 @@ export class AuthService{
         try {
             return await this.account.get();
         } catch (error) {
-            console.error("Error occured while getting user: ", error);
-            throw error;
+            if (error.code !== 401) console.error("Error occured while getting user: ", error);
+            return null;
         }
-        return null;
     }
 
     async logout(){
